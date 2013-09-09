@@ -20,6 +20,12 @@
           self.minDrives = ko.observable('10');
           self.maxDrives = ko.observable('1000');
           self.replicaCount = ko.observable('3');
+          self.minText = ko.computed(function() {
+              return 'Approx. parts per drive with ' + self.minDrives() + ' drives'
+          });
+          self.maxText = ko.computed(function() {
+              return 'Approx. parts per drive with ' + self.maxDrives() + ' drives'
+          });
           self.partPower = ko.computed(function() {
             return Math.ceil(Math.log(Math.ceil(parseFloat(parseFloat(self.maxDrives())) * 100.0 / parseFloat(self.replicaCount()))) * Math.LOG2E)
           });
@@ -27,10 +33,10 @@
             return Math.pow(2, parseFloat(self.partPower()))
           });
           self.partCountMin = ko.computed(function() {
-            return Math.pow(2, parseFloat(self.partPower())) * self.replicaCount() / self.minDrives();
+            return Math.round(Math.pow(2, parseFloat(self.partPower())) * self.replicaCount() / self.minDrives());
           });
           self.partCountMax = ko.computed(function() {
-            return Math.pow(2, parseFloat(self.partPower())) * self.replicaCount() / self.maxDrives();
+            return Math.round(Math.pow(2, parseFloat(self.partPower())) * self.replicaCount() / self.maxDrives());
           });
       }
     </script>
@@ -48,21 +54,21 @@
           <h2></h2>
            <form class="form-horizontal" role="form">
              <div class="form-group">
-               <label for="maxDrives" class="col-lg-4 control-label">Max Drives: </label>
+               <label for="maxDrives" class="col-lg-4 control-label">Max Drives:</label>
                <div class="col-lg-4">
-                 <input data-bind="value: maxDrives" type="number" class="form-control" id="maxDrives" placeholder="1000">
+                 <input data-bind="value: maxDrives" type="number" class="form-control" id="maxDrives" placeholder="1000" min="1">
                </div>
              </div>
              <div class="form-group">
                    <label for="minDrives" class="col-lg-4 control-label">Min Drives:</label>
                <div class="col-lg-4">
-                 <input data-bind="value: minDrives" type="number" class="form-control" id="minDrives" placeholder="10">
+                 <input data-bind="value: minDrives" type="number" class="form-control" id="minDrives" placeholder="10" min="1">
                </div>
              </div>
              <div class="form-group">
                <label for="replicas" class="col-lg-4 control-label">Replica's:</label>
                <div class="col-lg-4">
-                 <input data-bind="value: replicaCount" type="number" class="form-control" id="replicas" placeholder="3">
+                 <input data-bind="value: replicaCount" type="number" class="form-control" id="replicas" placeholder="3" min="1">
                </div>
              </div>
              <span class="help-block col-lg-12">Enter the maximum number of drives you ever expect to have in your cluster, how many drives you plan to start with, and how many replica's (copies of your data) you want.</span>
@@ -72,8 +78,8 @@
            <h2>Ring Partition Info</h2>
            <p>Recommended Part Power: <a href="#" data-bind="tooltip: {title: 'The partition power you should use'}, text: partPower"></a></p>
            <p>Total Partition Count: <a href="#" data-bind="tooltip: {title: 'Total number of partitions you would have in your system'}, text: partCount"></a></p>
-           <p>Max per drive: <a href="#" data-bind="tooltip: {title: 'Approx. parts per drive with ' + minDrives() + ' drives' }, text: partCountMin"></a></p>
-           <p>Min per drive: <a href="#" data-bind="tooltip: {title: 'Approx. parts per drive with ' + maxDrives() + ' drives' }, text: partCountMax"></a></p>
+           <p>Max per drive: <a href="#" data-bind="tooltip: {title: minText }, text: partCountMin, trigger: 'hover'"></a></p>
+           <p>Min per drive: <a href="#" data-bind="tooltip: {title: maxText }, text: partCountMax, trigger: 'hover'"></a></p>
         </div>
          <div class="col-lg-4">
            <h2>Ring Builder Commands</h2>
@@ -146,15 +152,12 @@
                         Andrew Hale - <a href="//github.com/ahale"><i class="icon-github"></i></a>
                     </div>
                     <div class="col-lg-6">
-                        "The Dicator"
+                        Florian "syn" Hines - <a href="//github.com/pandemicsyn"><i class="icon-github"></i></a>
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-lg-6">
-                        Florian "syn" Hines - <a href="//github.com/pandemicsyn"><i class="icon-github"></i></a>
-                    </div>
-                    <div class="col-lg-6">
-                        [Your name here] - <a href="mailto:florian.hines@rackspace.com?Subject=CloudFilesGig"><i class="icon-envelope"></i></a>
+                    <div class="col-lg-12">
+                        [Your name here] - Shoot us an email <a href="mailto:florian.hines@rackspace.com?Subject=CloudFilesGig"><i class="icon-envelope"></i></a>
                     </div>
                   </div>
               </div>
